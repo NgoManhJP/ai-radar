@@ -1,0 +1,8 @@
+# Chuẩn hoá line ending: mọi file text dùng LF trong repo lẫn working copy.
+# Chặn warning "LF will be replaced by CRLF" trên Windows.
+* text=auto eol=lf
+
+# File nhị phân
+*.png binary
+*.jpg binary
+*.ico binary

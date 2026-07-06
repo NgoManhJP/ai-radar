@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đánh giá: Engram — plugin học tập cho Claude Code</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --surface: #fff; --border: #e2e5ea;
+    --text: #1a1d23; --text-2: #5c6470;
+    --accent: #2563eb; --accent-soft: #eff4ff;
+    --good: #15803d; --good-bg: #dcfce7;
+    --warn: #b45309; --warn-bg: #fef3c7;
+    --bad: #b91c1c;  --bad-bg: #fee2e2;
+    --code-bg: #f1f3f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101318; --surface: #191d24; --border: #2a303a;
+      --text: #e6e9ee; --text-2: #9aa3b0;
+      --accent: #7aa2ff; --accent-soft: #1c2740;
+      --good: #86efac; --good-bg: #10291a;
+      --warn: #fbbf24; --warn-bg: #3a2c0d;
+      --bad: #fca5a5;  --bad-bg: #3a1416;
+      --code-bg: #12151b;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         background: var(--bg); color: var(--text); line-height: 1.6; padding: 0 20px 60px; }
+  main { max-width: 860px; margin: 0 auto; }
+  a { color: var(--accent); }
+  h1 { font-size: 1.5rem; margin: 36px 0 4px; }
+  h2 { font-size: 1.12rem; margin: 34px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .meta { color: var(--text-2); font-size: .85rem; margin-bottom: 20px; }
+  .verdict { border-radius: 12px; padding: 16px 20px; margin: 20px 0;
+             background: var(--warn-bg); border: 1px solid var(--warn); }
+  .verdict b.tag { color: var(--warn); font-size: 1.05rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+          padding: 14px 18px; margin: 10px 0; }
+  .score-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; font-size: .9rem; }
+  .score-row .lab { width: 220px; flex-shrink: 0; }
+  .score-row .track { flex: 1; height: 12px; background: var(--code-bg); border-radius: 6px; overflow: hidden; }
+  .score-row .fill { height: 100%; border-radius: 6px; }
+  .score-row .val { width: 46px; text-align: right; font-variant-numeric: tabular-nums; color: var(--text-2); }
+  .g .fill { background: var(--good); } .w .fill { background: var(--warn); } .b .fill { background: var(--bad); }
+  ul { padding-left: 22px; } li { margin: 6px 0; }
+  .pill { display: inline-block; font-size: .72rem; font-weight: 600; border-radius: 6px; padding: 1px 8px; margin-right: 6px; vertical-align: middle; }
+  .pill.good { background: var(--good-bg); color: var(--good); }
+  .pill.warn { background: var(--warn-bg); color: var(--warn); }
+  .pill.bad  { background: var(--bad-bg);  color: var(--bad); }
+  code { background: var(--code-bg); padding: 1px 6px; border-radius: 4px;
+         font-family: ui-monospace, Consolas, monospace; font-size: .84em; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+        padding: 12px 14px; overflow-x: auto; font-size: .8rem; margin: 10px 0;
+        font-family: ui-monospace, Consolas, monospace; }
+  table { border-collapse: collapse; width: 100%; font-size: .86rem; margin: 10px 0; }
+  th { text-align: left; color: var(--text-2); font-size: .74rem; text-transform: uppercase;
+       letter-spacing: .05em; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .check { list-style: none; padding: 0; }
+  .check li { padding: 8px 12px; margin: 6px 0; background: var(--surface);
+              border: 1px solid var(--border); border-radius: 8px; }
+  .check .step { font-weight: 600; color: var(--accent); margin-right: 6px; }
+  .small { font-size: .82rem; color: var(--text-2); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 700px) { .cols { grid-template-columns: 1fr; } .score-row .lab { width: 140px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Đánh giá: Engram</h1>
+  <p class="meta">
+    Plugin học tập cho Claude Code · <a href="https://github.com/nagisanzenin/engram">nagisanzenin/engram</a> · v0.2.0 · MIT<br>
+    Đánh giá ngày 2026-07-06 · Đã đọc toàn bộ 23 file trong repo (commit mới nhất: 2026-07-05) · Người đánh giá: Claude (Fable 5)
+  </p>
+
+  <div class="verdict">
+    <b class="tag">⚖️ KẾT LUẬN: ĐÁNG THỬ CÓ KIỂM SOÁT</b>
+    <p style="margin-top:8px">Chất lượng thiết kế và nền tảng khoa học <b>cao bất thường</b> so với một plugin cá nhân — nhưng mới 1 ngày tuổi, mẫu thử n=1 (chính tác giả), và <b>chưa hỗ trợ Windows tử tế</b>. Đề xuất: chạy thử 2 tuần với đúng 1 topic đang học, đo bằng số liệu của chính nó (<code>/coach</code>), rồi quyết định giữ hay bỏ. An toàn để cài: không có network call, data 100% local.</p>
+  </div>
+
+  <h2>📊 Scorecard</h2>
+  <div class="card">
+    <div class="score-row g"><span class="lab">Nền tảng khoa học học tập</span><span class="track"><span class="fill" style="width:90%"></span></span><span class="val">9/10</span></div>
+    <div class="score-row g"><span class="lab">Chất lượng kỹ thuật (code)</span><span class="track"><span class="fill" style="width:85%"></span></span><span class="val">8.5/10</span></div>
+    <div class="score-row g"><span class="lab">An toàn &amp; riêng tư</span><span class="track"><span class="fill" style="width:90%"></span></span><span class="val">9/10</span></div>
+    <div class="score-row g"><span class="lab">Thiết kế chống bỏ cuộc</span><span class="track"><span class="fill" style="width:80%"></span></span><span class="val">8/10</span></div>
+    <div class="score-row w"><span class="lab">Tương thích Windows</span><span class="track"><span class="fill" style="width:45%"></span></span><span class="val">4.5/10</span></div>
+    <div class="score-row b"><span class="lab">Độ trưởng thành / cộng đồng</span><span class="track"><span class="fill" style="width:25%"></span></span><span class="val">2.5/10</span></div>
+    <p class="small" style="margin-top:10px">Điểm dựa trên việc đọc trực tiếp toàn bộ source + docs, không dựa trên bài share. Selftest (33 checks) tồn tại trong code và logic đúng khi đọc tay, nhưng <b>chưa được chạy xác minh</b> trong lần đánh giá này (chính sách không thực thi code từ repo ngoài).</p>
+  </div>
+
+  <h2>🎯 Impact với bạn (đang tự học AI)</h2>
+  <table>
+    <tr><th>Khía cạnh</th><th>Đánh giá</th></tr>
+    <tr><td><b>Bài toán nó giải</b></td><td>Đúng bài toán của người tự học AI: đọc/hỏi Claude hiểu ngay nhưng 1–2 tuần sau quên sạch. Engram thêm 3 thứ chat thường không có: kiểm tra thật (chấm mù), bộ nhớ xuyên phiên (file JSON), và lịch ôn đúng lúc sắp quên (FSRS).</td></tr>
+    <tr><td><b>Chi phí thời gian</b></td><td><code>/learn</code> 5–60 phút/lần (tự chọn mode) · <code>/review</code> 2–4 phút/ngày khi đến hạn · <code>/coach</code> hàng tuần. Cam kết thật sự là <b>2–4 phút/ngày</b> — thiết kế "two-minute floor" để giữ thói quen.</td></tr>
+    <tr><td><b>Chi phí token</b></td><td>Đáng kể với Deep mode: mỗi topic mới spawn 1 agent xây curriculum, mỗi phiên spawn 1 agent chấm bài, mỗi threshold concept sinh 1 trang HTML. Dùng quota Claude của bạn.</td></tr>
+    <tr><td><b>Lợi ích kỳ vọng</b></td><td>Retrieval practice + spaced repetition là 2 kỹ thuật được xếp "high utility" trong meta-analysis (Dunlosky 2013) — khoa học nền là thật. Mục tiêu của chính tool: ≥80% recall sau 7 ngày. Chưa ai ngoài tác giả xác nhận plugin đạt được.</td></tr>
+    <tr><td><b>Lock-in nếu bỏ</b></td><td><span class="pill good">Rất thấp</span> Toàn bộ state là JSON đọc được ở <code>~/.claude/learning/</code>; core là 1 file Python stdlib chạy độc lập được. Gỡ plugin không mất gì.</td></tr>
+  </table>
+
+  <h2>✅ Điểm mạnh (đã xác minh trong source)</h2>
+  <div class="cols">
+    <div class="card">
+      <b>Kiến trúc "tam quyền phân lập" là thật, không phải marketing</b>
+      <p class="small">Tutor dạy nhưng bị cấm chấm điểm; assessor (<code>agents/engram-assessor.md</code>) chấm mù — chỉ nhận rubric + câu trả lời, không thấy buổi học; mọi ngày giờ ôn tập do <code>engram.py</code> tính (FSRS-4.5, tham số chuẩn của open-spaced-repetition), model không bao giờ tự tính lịch.</p>
+    </div>
+    <div class="card">
+      <b>Kỷ luật chống "bịa số liệu" được luật hoá</b>
+      <p class="small">Sau lỗi thật ở phiên dogfood đầu (tutor tự bịa confidence), quy tắc "null thay vì ước lượng" được ghi cứng vào dialogue-grammar và assessor. CHANGELOG truy vết từng thay đổi về một lỗi quan sát được — thói quen kỹ thuật hiếm thấy.</p>
+    </div>
+    <div class="card">
+      <b>Code lõi chất lượng cao</b>
+      <p class="small">Ghi file atomic (tempfile + os.replace), receipts append-only, stash chống mất bài khi crash/compact context, selftest 33 checks, lệnh <code>doctor</code> chẩn đoán. Toán FSRS đối chiếu đúng công thức FSRS-4.5 công khai (đọc tay, chưa chạy).</p>
+    </div>
+    <div class="card">
+      <b>An toàn: đã soi từng chỗ có thể "gọi ra ngoài"</b>
+      <p class="small">Import của <code>engram.py</code>: chỉ stdlib, <b>không có</b> urllib/socket/requests. Hook session-start chỉ 2 dòng, lỗi thì im lặng. Không pip dependency → không rủi ro supply-chain. Selftest còn kiểm tra dashboard HTML không chứa http(s) link.</p>
+    </div>
+    <div class="card">
+      <b>Docs khoa học trung thực</b>
+      <p class="small">Trích dẫn chuẩn (Roediger &amp; Karpicke 2006, Cepeda 2006, Pashler 2008 bác learning styles, VanLehn 2011...) và tự hạ giọng đúng chỗ: Bloom 2σ "famously optimistic", quy tắc 85% "suggestive rather than law". Không phải kiểu rắc citation cho sang.</p>
+    </div>
+    <div class="card">
+      <b>Chống bỏ cuộc bằng thiết kế</b>
+      <p class="small">Review chỉ 2–4 phút; hook nhắc đúng 1–2 dòng và im lặng khi không có gì đến hạn; bỏ lỡ không bị phạt kiểu Duolingo (cấm "streak-anxiety mechanics" trong constitution). Đây là chỗ các tool học tập thường chết.</p>
+    </div>
+  </div>
+
+  <h2>⚠️ Điểm yếu &amp; rủi ro</h2>
+  <ul>
+    <li><span class="pill bad">Cao</span> <b>Windows chưa được hỗ trợ chính thức.</b> README chỉ nói macOS/Linux. Skills hardcode lệnh <code>python3</code> (Windows thường là <code>python</code>), hook là bash script, <code>/coach dashboard</code> dùng lệnh <code>open</code> của macOS. Cài trên máy bạn (Win 10) <b>sẽ trục trặc</b> nếu không có python3 alias — xem checklist bên dưới.</li>
+    <li><span class="pill bad">Cao</span> <b>1 ngày tuổi, n=1.</b> Ra mắt 2026-07-05, người dùng duy nhất là tác giả, chưa có số liệu tuần đầu. Toàn bộ hiệu quả là "khoa học nền đúng + kiến trúc hợp lý", chưa phải "đã chứng minh trên nhiều người".</li>
+    <li><span class="pill warn">Vừa</span> <b>Kỷ luật tutor là prompt, không phải code.</b> "Không giảng trước khi học viên đoán", "không chấm hộ"... nằm trong SKILL.md — model vẫn có thể drift trong phiên dài. Chỉ phần lịch + receipts là được code cưỡng chế thật.</li>
+    <li><span class="pill warn">Vừa</span> <b>Tốn token</b> với topic nhiều threshold concepts (mỗi cái sinh 1 trang HTML tương tác). Có thể tắt: <code>settings.artifacts=off</code>.</li>
+    <li><span class="pill warn">Vừa</span> <b>Một tác giả, rủi ro bỏ rơi</b> — bù lại lock-in rất thấp (JSON local + core stdlib độc lập), nên rủi ro thực tế chỉ là "không có tính năng mới".</li>
+    <li><span class="pill good">Thấp</span> <b>Refit v1 còn thô</b> (1 hệ số nhân, chưa fit đủ 17 tham số FSRS) — nhưng được guard ≥50 reviews và tự nhận là coarse trong code lẫn README.</li>
+  </ul>
+
+  <h2>🚀 Checklist hành động (theo thứ tự)</h2>
+  <ul class="check">
+    <li><span class="step">1.</span><b>Chuẩn bị Windows trước khi cài</b> — mở terminal chạy <code>python3 --version</code>. Nếu không có: cài Python từ python.org rồi tạo alias/copy <code>python.exe → python3.exe</code>, hoặc bật alias python3 của Microsoft Store. Không có bước này plugin sẽ chết im lặng.</li>
+    <li><span class="step">2.</span><b>Cài</b> — <code>claude plugin marketplace add nagisanzenin/engram</code> rồi <code>claude plugin install engram@engram</code>. Kiểm tra sức khoẻ: <code>python3 &lt;plugin-path&gt;/scripts/engram.py doctor</code> và <code>selftest</code> (kỳ vọng 33/33).</li>
+    <li><span class="step">3.</span><b>Thử với 1 topic đang học thật</b> — ví dụ <code>/learn transformer attention</code> hoặc topic trong ai-study. Chọn mode Standard (~25 phút). Đừng mở 3–4 topic cùng lúc trong tuần đầu.</li>
+    <li><span class="step">4.</span><b>Cam kết 2 tuần review</b> — khi mở Claude Code thấy nhắc <code>[engram] N reviews due</code> thì chạy <code>/review</code> (2–4 phút). Đây là biến số quyết định — tool đúng đến mấy cũng vô nghĩa nếu bỏ review.</li>
+    <li><span class="step">5.</span><b>Ngày 14: quyết định bằng số liệu</b> — chạy <code>/coach</code>: nếu recall ≥70–80% và streak giữ được → chuyển status <code>using</code>, mở rộng topic. Nếu bản thân không quay lại review → <code>archived</code>, không tự trách: đó là dữ liệu về thói quen, không phải về tool.</li>
+    <li><span class="step">6.</span><b>Theo dõi repo</b> — dùng <code>/radar review</code> hàng tuần xem tác giả có công bố số liệu tuần đầu (đã hứa trong bài share) và có fix hỗ trợ Windows không.</li>
+  </ul>
+
+  <h2>🔬 Repo có gì (đã đọc 100%)</h2>
+  <pre>
+engram/  (23 file, ~180KB text, commit cuối 2026-07-05)
+├── skills/          /learn /review /coach + dialogue-grammar (kỷ luật chống sycophancy,
+│                    8 beats: gap→predict→struggle→resolve→explain→connect→verify→close)
+├── agents/          curriculum-architect (topic → DAG khái niệm, output JSON strict)
+│                    assessor (chấm mù theo rubric, xuất receipt JSON)
+│                    artifact-smith (sinh HTML tương tác theo Explorable Contract 7 điều)
+├── hooks/           SessionStart: nhắc review đến hạn, 2 dòng bash, lỗi → im lặng
+├── scripts/         engram.py 1083 dòng, stdlib-only: FSRS-4.5, state machine,
+│                    receipts, stash, stats, refit, doctor, dashboard HTML, selftest
+└── docs/            4 tài liệu lý thuyết (~55KB): 12 nguyên tắc có citation,
+                     prior art (Anki/Math Academy/Quantum Country/LLM tutors), roadmap 5 phase</pre>
+
+  <p class="small" style="margin-top:30px">
+    ← <a href="../index.html">Quay lại AI Radar</a> · Đánh giá này nằm tại <code>ai-radar/reviews/engram.html</code>
+  </p>
+</main>
+</body>
+</html>

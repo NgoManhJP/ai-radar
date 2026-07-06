@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Radar — kho tổng hợp repo &amp; tool AI</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --border: #e2e5ea;
+    --text: #1a1d23;
+    --text-2: #5c6470;
+    --accent: #2563eb;
+    --accent-soft: #eff4ff;
+    --code-bg: #f1f3f6;
+    --shadow: 0 1px 3px rgba(0,0,0,.06);
+    --st-new: #b45309;      --st-new-bg: #fef3c7;
+    --st-trying: #1d4ed8;   --st-trying-bg: #dbeafe;
+    --st-using: #15803d;    --st-using-bg: #dcfce7;
+    --st-archived: #6b7280; --st-archived-bg: #f3f4f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101318;
+      --surface: #191d24;
+      --border: #2a303a;
+      --text: #e6e9ee;
+      --text-2: #9aa3b0;
+      --accent: #7aa2ff;
+      --accent-soft: #1c2740;
+      --code-bg: #12151b;
+      --shadow: 0 1px 3px rgba(0,0,0,.4);
+      --st-new: #fbbf24;      --st-new-bg: #3a2c0d;
+      --st-trying: #93c5fd;   --st-trying-bg: #16233d;
+      --st-using: #86efac;    --st-using-bg: #10291a;
+      --st-archived: #9ca3af; --st-archived-bg: #23272e;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Sans", "Yu Gothic UI", sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.55;
+  }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px 12px;
+  }
+  .head-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; }
+  h1 .dot { color: var(--accent); }
+  .counts { color: var(--text-2); font-size: .85rem; flex: 1; }
+  #lang-toggle {
+    border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
+    border-radius: 999px; padding: 4px 14px; font-size: .82rem; cursor: pointer;
+  }
+  #lang-toggle:hover { color: var(--accent); border-color: var(--accent); }
+  .controls { max-width: 1100px; margin: 10px auto 0; display: flex; flex-direction: column; gap: 8px; }
+  #search {
+    width: 100%; padding: 9px 14px; font-size: .95rem;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--surface); color: var(--text);
+  }
+  #search:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
+    border-radius: 999px; padding: 3px 12px; font-size: .8rem; cursor: pointer;
+  }
+  .chip.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .chip-group-label { font-size: .75rem; color: var(--text-2); align-self: center; margin-right: 2px; text-transform: uppercase; letter-spacing: .04em; }
+  main { max-width: 1100px; margin: 20px auto 60px; padding: 0 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 18px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .card-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card h2 { font-size: 1.05rem; }
+  .card h2 a { color: var(--text); text-decoration: none; }
+  .card h2 a:hover { color: var(--accent); }
+  .badge { font-size: .7rem; font-weight: 600; border-radius: 6px; padding: 2px 8px; white-space: nowrap; }
+  .badge.cat { background: var(--accent-soft); color: var(--accent); }
+  .badge.st-new { background: var(--st-new-bg); color: var(--st-new); }
+  .badge.st-trying { background: var(--st-trying-bg); color: var(--st-trying); }
+  .badge.st-using { background: var(--st-using-bg); color: var(--st-using); }
+  .badge.st-archived { background: var(--st-archived-bg); color: var(--st-archived); }
+  .summary { font-size: .9rem; }
+  .why {
+    font-size: .85rem; color: var(--text-2);
+    border-left: 3px solid var(--accent); padding-left: 10px;
+  }
+  .install { position: relative; }
+  .install pre {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 40px 10px 12px; font-size: .78rem; overflow-x: auto;
+    font-family: ui-monospace, Consolas, monospace;
+  }
+  .copy-btn {
+    position: absolute; top: 6px; right: 6px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
+    border-radius: 6px; padding: 2px 8px; font-size: .72rem; cursor: pointer;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .tag {
+    font-size: .72rem; color: var(--text-2); background: var(--code-bg);
+    border-radius: 5px; padding: 2px 7px; cursor: pointer; border: 1px solid transparent;
+  }
+  .tag:hover, .tag.active { color: var(--accent); border-color: var(--accent); }
+  .meta { font-size: .74rem; color: var(--text-2); margin-top: auto; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .notes { font-size: .8rem; color: var(--text-2); font-style: italic; }
+  .review-link { font-size: .84rem; }
+  .review-link a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .review-link a:hover { text-decoration: underline; }
+  .empty { text-align: center; color: var(--text-2); padding: 60px 0; }
+  footer { text-align: center; color: var(--text-2); font-size: .78rem; padding: 20px; }
+  footer code { background: var(--code-bg); padding: 1px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="head-row">
+    <h1>AI Radar<span class="dot">.</span></h1>
+    <span class="counts" id="counts"></span>
+    <button id="lang-toggle" title="Switch language"></button>
+  </div>
+  <div class="controls">
+    <input id="search" type="search">
+    <div class="chips" id="status-chips"><span class="chip-group-label" id="status-group-label"></span></div>
+    <div class="chips" id="cat-chips"><span class="chip-group-label" id="cat-group-label"></span></div>
+  </div>
+</header>
+
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" hidden></div>
+</main>
+
+<footer id="footer"></footer>
+
+<script src="data.js"></script>
+<script>
+  // ---- i18n ------------------------------------------------------------
+  const UI = {
+    vi: {
+      htmlLang: "vi",
+      searchPlaceholder: "Tìm theo tên, mô tả, tag… (ví dụ: spaced repetition)",
+      statusGroup: "Trạng thái",
+      categoryGroup: "Loại",
+      STATUS_LABELS: { "new": "🆕 Chưa thử", "trying": "🧪 Đang vọc", "using": "✅ Đang dùng", "archived": "📦 Lưu trữ" },
+      CATEGORY_LABELS: {
+        "claude-plugin": "Claude plugin", "claude-skill": "Claude skill", "mcp": "MCP server",
+        "repo": "Repo", "tool": "Tool", "article": "Bài viết", "course": "Khoá học", "model": "Model"
+      },
+      counts: (total, fresh, using) => `${total} item · ${fresh} chưa thử · ${using} đang dùng`,
+      showing: n => ` · đang hiển thị ${n}`,
+      empty: "Không có item nào khớp bộ lọc. 🔍",
+      reviewLink: "📋 Xem đánh giá chi tiết →",
+      articleLink: "📖 Đọc toàn văn bài viết →",
+      copy: "Copy", copied: "✓ Đã copy",
+      copyTitle: "Copy lệnh cài",
+      footer: 'Thêm item mới: paste bài share vào Claude Code với <code>/radar add &lt;nội dung&gt;</code> · Điểm tin: <code>/radar review</code>',
+      toggleLabel: "🌐 日本語"
+    },
+    ja: {
+      htmlLang: "ja",
+      searchPlaceholder: "名前・説明・タグで検索…",
+      statusGroup: "状態",
+      categoryGroup: "種類",
+      STATUS_LABELS: { "new": "🆕 未試用", "trying": "🧪 試用中", "using": "✅ 使用中", "archived": "📦 アーカイブ" },
+      CATEGORY_LABELS: {
+        "claude-plugin": "Claudeプラグイン", "claude-skill": "Claudeスキル", "mcp": "MCPサーバー",
+        "repo": "リポジトリ", "tool": "ツール", "article": "記事", "course": "講座", "model": "モデル"
+      },
+      counts: (total, fresh, using) => `全${total}件 · 未試用 ${fresh} · 使用中 ${using}`,
+      showing: n => ` · 表示中 ${n}件`,
+      empty: "フィルタに一致するアイテムはありません 🔍",
+      reviewLink: "📋 詳細評価を見る →",
+      articleLink: "📖 記事全文を読む →",
+      copy: "コピー", copied: "✓ コピー済み",
+      copyTitle: "インストールコマンドをコピー",
+      footer: '新規追加: Claude Codeに投稿を貼り付けて <code>/radar add</code> · 定期チェック: <code>/radar review</code>',
+      toggleLabel: "🌐 Tiếng Việt"
+    }
+  };
+
+  let lang = localStorage.getItem("radar-lang") || "vi";
+  if (!UI[lang]) lang = "vi";
+  const T = () => UI[lang];
+  // Trả về field đã dịch nếu có (item.i18n.ja.<field>), fallback về tiếng Việt.
+  const L = (item, field) => (item.i18n && item.i18n[lang] && item.i18n[lang][field]) || item[field];
+
+  const state = { q: "", status: null, category: null, tag: null };
+
+  function escapeHtml(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function matches(item) {
+    if (state.status && item.status !== state.status) return false;
+    if (state.category && item.category !== state.category) return false;
+    if (state.tag && !(item.tags || []).includes(state.tag)) return false;
+    if (state.q) {
+      const hay = [item.name, item.summary, item.whyCare, item.notes, item.source,
+                   (item.tags || []).join(" "), JSON.stringify(item.i18n || "")]
+        .join(" ").toLowerCase();
+      if (!hay.includes(state.q)) return false;
+    }
+    return true;
+  }
+
+  function buildChips() {
+    const mk = (containerId, labelId, values, labels, key) => {
+      const box = document.getElementById(containerId);
+      box.querySelectorAll(".chip").forEach(c => c.remove());
+      document.getElementById(labelId).textContent = key === "status" ? T().statusGroup : T().categoryGroup;
+      values.forEach(v => {
+        const b = document.createElement("button");
+        b.className = "chip";
+        b.textContent = labels[v] || v;
+        b.dataset.value = v;
+        b.onclick = () => { state[key] = state[key] === v ? null : v; render(); };
+        box.appendChild(b);
+      });
+    };
+    mk("status-chips", "status-group-label", [...new Set(RADAR_ITEMS.map(i => i.status))], T().STATUS_LABELS, "status");
+    mk("cat-chips", "cat-group-label", [...new Set(RADAR_ITEMS.map(i => i.category))], T().CATEGORY_LABELS, "category");
+  }
+
+  function card(item) {
+    const el = document.createElement("article");
+    el.className = "card";
+    const tags = (item.tags || []).map(t =>
+      `<span class="tag ${state.tag === t ? "active" : ""}" data-tag="${escapeHtml(t)}">#${escapeHtml(t)}</span>`).join("");
+    el.innerHTML = `
+      <div class="card-top">
+        <h2><a href="${escapeHtml(item.repo || item.url || "#")}" target="_blank" rel="noopener">${escapeHtml(L(item, "name"))}</a></h2>
+        <span class="badge cat">${escapeHtml(T().CATEGORY_LABELS[item.category] || item.category)}</span>
+        <span class="badge st-${escapeHtml(item.status)}">${escapeHtml(T().STATUS_LABELS[item.status] || item.status)}</span>
+      </div>
+      <p class="summary">${escapeHtml(L(item, "summary"))}</p>
+      ${L(item, "whyCare") ? `<p class="why">${escapeHtml(L(item, "whyCare"))}</p>` : ""}
+      ${item.install ? `
+        <div class="install">
+          <pre>${escapeHtml(item.install)}</pre>
+          <button class="copy-btn" title="${escapeHtml(T().copyTitle)}">${escapeHtml(T().copy)}</button>
+        </div>` : ""}
+      ${L(item, "notes") ? `<p class="notes">📝 ${escapeHtml(L(item, "notes"))}</p>` : ""}
+      ${item.review ? `<p class="review-link"><a href="${escapeHtml(item.review)}">${T().reviewLink}</a></p>` : ""}
+      ${item.article ? `<p class="review-link"><a href="${escapeHtml(item.article)}">${T().articleLink}</a></p>` : ""}
+      <div class="meta">
+        <span>➕ ${escapeHtml(item.addedAt || "?")}</span>
+        <span>${escapeHtml(item.source || "")}</span>
+      </div>`;
+    el.querySelectorAll(".tag").forEach(t => {
+      t.onclick = () => { state.tag = state.tag === t.dataset.tag ? null : t.dataset.tag; render(); };
+    });
+    const btn = el.querySelector(".copy-btn");
+    if (btn) btn.onclick = () => {
+      navigator.clipboard.writeText(item.install).then(() => {
+        btn.textContent = T().copied; setTimeout(() => (btn.textContent = T().copy), 1500);
+      });
+    };
+    return el;
+  }
+
+  function render() {
+    document.querySelectorAll("#status-chips .chip").forEach(c => c.classList.toggle("active", c.dataset.value === state.status));
+    document.querySelectorAll("#cat-chips .chip").forEach(c => c.classList.toggle("active", c.dataset.value === state.category));
+
+    const items = RADAR_ITEMS.filter(matches)
+      .sort((a, b) => (b.addedAt || "").localeCompare(a.addedAt || ""));
+    const grid = document.getElementById("grid");
+    grid.innerHTML = "";
+    items.forEach(i => grid.appendChild(card(i)));
+    const empty = document.getElementById("empty");
+    empty.hidden = items.length > 0;
+    empty.textContent = T().empty;
+
+    const using = RADAR_ITEMS.filter(i => i.status === "using").length;
+    const fresh = RADAR_ITEMS.filter(i => i.status === "new").length;
+    document.getElementById("counts").textContent =
+      T().counts(RADAR_ITEMS.length, fresh, using) +
+      (items.length !== RADAR_ITEMS.length ? T().showing(items.length) : "");
+  }
+
+  function applyLang() {
+    document.documentElement.lang = T().htmlLang;
+    document.getElementById("search").placeholder = T().searchPlaceholder;
+    document.getElementById("lang-toggle").textContent = T().toggleLabel;
+    document.getElementById("footer").innerHTML = T().footer;
+    buildChips();
+    render();
+  }
+
+  document.getElementById("lang-toggle").onclick = () => {
+    lang = lang === "vi" ? "ja" : "vi";
+    localStorage.setItem("radar-lang", lang);
+    applyLang();
+  };
+
+  document.getElementById("search").addEventListener("input", e => {
+    state.q = e.target.value.trim().toLowerCase(); render();
+  });
+
+  applyLang();
+</script>
+</body>
+</html>
