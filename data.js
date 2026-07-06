@@ -45,8 +45,8 @@ const RADAR_ITEMS = [
     requirements: "Chỉ cần python3, không cần pip install. MIT, free.",
     source: "Bài share trên group (voz-style), 2026-07-06",
     addedAt: "2026-07-06",
-    status: "new",
-    notes: "2026-07-06: Đã đọc 100% repo và đánh giá chi tiết — kết luận ĐÁNG THỬ CÓ KIỂM SOÁT (khoa học + code tốt bất thường, nhưng 1 ngày tuổi, n=1, Windows cần workaround python3). Xem trang đánh giá.",
+    status: "trying",
+    notes: "2026-07-06: Đã đọc 100% repo và đánh giá chi tiết — kết luận ĐÁNG THỬ CÓ KIỂM SOÁT (xem trang đánh giá). Cùng ngày: đã cài v0.3.0 trên Windows (fix python3 stub bằng shim C:\\Python314\\python3.exe), selftest 63/63 PASS, doctor OK. Bắt đầu giai đoạn thử 2 tuần.",
     review: "reviews/engram.html",
     i18n: {
       ja: {
@@ -55,7 +55,7 @@ const RADAR_ITEMS = [
         whyCare:
           "最大の見どころ：チューター自身は採点禁止——独立した審査エージェントがブラインド採点（模範解答と回答のみ参照、授業は見ない）し、進歩の錯覚を防ぐ。データはローカルJSONのみで外部送信なし。「AIがコードを書く速度に理解が追いつかない」問題への正面からの答え。",
         notes:
-          "2026-07-06: リポジトリを100%読了し詳細評価済み——結論は「管理された試用に値する」（科学とコードの質は異例に高いが、公開1日目・n=1、Windowsはpython3の回避策が必要）。評価ページ（ベトナム語）参照。"
+          "2026-07-06: リポジトリを100%読了し詳細評価済み——結論は「管理された試用に値する」（評価ページ・ベトナム語参照）。同日: Windowsにv0.3.0をインストール（python3スタブをシムで解決）、selftest 63/63 PASS。2週間の試用開始。"
       }
     },
     lastCheckedAt: "2026-07-06"
