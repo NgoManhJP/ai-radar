@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Làm chủ AI Vibe Coding với Claude Code — Con người là "Cửa ải Cuối"</title>
+<style>
+  :root {
+    --bg: #faf9f7; --surface: #fff; --border: #e5e2dc;
+    --text: #23201c; --text-2: #6b655c;
+    --accent: #2563eb; --accent-soft: #eff4ff;
+    --warn-bg: #fdf6e3; --warn-border: #e8d9a8; --warn-text: #8a6d1d;
+    --code-bg: #f2f0ea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14120f; --surface: #1d1a16; --border: #322e27;
+      --text: #eae6de; --text-2: #a29a8d;
+      --accent: #7aa2ff; --accent-soft: #1c2740;
+      --warn-bg: #2a2415; --warn-border: #4d4326; --warn-text: #e0c069;
+      --code-bg: #211e18;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: Charter, "Iowan Old Style", Georgia, "Times New Roman", serif;
+    font-size: 1.06rem; line-height: 1.75; padding: 0 20px 80px;
+  }
+  main { max-width: 700px; margin: 0 auto; }
+  .top-nav { font-family: system-ui, sans-serif; font-size: .82rem; padding: 18px 0; }
+  .top-nav a { color: var(--text-2); text-decoration: none; }
+  .top-nav a:hover { color: var(--accent); }
+  h1 { font-size: 1.7rem; line-height: 1.3; margin: 20px 0 10px; letter-spacing: -.01em; }
+  .byline { font-family: system-ui, sans-serif; font-size: .82rem; color: var(--text-2); margin-bottom: 18px; line-height: 1.6; }
+  .toc {
+    font-family: system-ui, sans-serif; font-size: .84rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 18px; margin: 0 0 34px;
+  }
+  .toc .label { font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: .7rem; color: var(--text-2); display: block; margin-bottom: 8px; }
+  .toc ol { margin: 0; padding-left: 20px; columns: 1; }
+  .toc li { margin: 3px 0; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  h2 { font-size: 1.4rem; line-height: 1.3; margin: 46px 0 16px; scroll-margin-top: 20px; }
+  h3 { font-size: 1.14rem; margin: 30px 0 10px; scroll-margin-top: 20px; }
+  h4 { font-size: 1rem; margin: 20px 0 6px; }
+  p { margin: 0 0 16px; }
+  strong { font-weight: 700; }
+  code {
+    font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: .87em;
+    background: var(--code-bg); padding: 1px 6px; border-radius: 4px;
+  }
+  .tldr {
+    font-family: system-ui, sans-serif; font-size: .92rem; line-height: 1.65;
+    background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 10px;
+    padding: 18px 20px; margin: 0 0 36px;
+  }
+  .tldr .label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); display: block; margin-bottom: 10px; }
+  .tldr ul { margin: 0; padding-left: 20px; }
+  .tldr li { margin: 8px 0; }
+  blockquote {
+    margin: 22px 0; padding: 6px 0 6px 20px;
+    border-left: 3px solid var(--accent);
+    font-size: 1rem; line-height: 1.6; font-style: italic; color: var(--text);
+  }
+  blockquote cite {
+    display: block; font-style: normal; font-family: system-ui, sans-serif;
+    font-size: .78rem; color: var(--text-2); margin-top: 6px;
+  }
+  .finding {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 20px; margin: 16px 0;
+  }
+  .finding h4 { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; font-size: 1.02rem; }
+  .num-badge {
+    font-family: system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff;
+    font-size: .85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .finding p:last-child { margin-bottom: 0; }
+  .finding ul { margin: 8px 0 0; padding-left: 20px; }
+  .finding li { margin: 8px 0; }
+  ul, ol { margin: 0 0 16px; padding-left: 26px; }
+  li { margin: 5px 0; }
+  .note {
+    font-family: system-ui, sans-serif; font-size: .85rem; color: var(--warn-text);
+    background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: 8px;
+    padding: 14px 18px; margin: 18px 0;
+  }
+  .note ul { margin: 6px 0 0; padding-left: 20px; color: var(--warn-text); }
+  .note li { margin: 6px 0; }
+  .note strong { color: var(--warn-text); }
+  .phase-label {
+    font-family: system-ui, sans-serif; font-weight: 700; font-size: .95rem;
+    color: var(--accent); margin: 26px 0 8px;
+  }
+  .footer-nav { font-family: system-ui, sans-serif; font-size: .85rem; color: var(--text-2);
+    margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .footer-nav a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <nav class="top-nav"><a href="../index.html">← AI Radar</a></nav>
+
+  <h1>Làm chủ AI Vibe Coding với Claude Code: Giữ Quyền Kiểm soát khi Con người là "Cửa ải Cuối"</h1>
+  <p class="byline">Bài tổng hợp nghiên cứu chia sẻ trên group · lưu vào Radar ngày 2026-07-07 · không rõ tác giả/công cụ tạo gốc (có dạng một deep-research report, trích dẫn nguồn cụ thể: Anthropic, Veracode, CodeRabbit, GitClear, Karpathy...) · ≈ 20–25 phút đọc · toàn văn giữ nguyên, chỉ trình bày lại</p>
+
+  <nav class="toc">
+    <span class="label">Mục lục</span>
+    <ol>
+      <li><a href="#tldr">TL;DR</a></li>
+      <li><a href="#key-findings">Key Findings (6 điểm)</a></li>
+      <li><a href="#details">Details — 4 vấn đề chi tiết</a></li>
+      <li><a href="#recommendations">Recommendations — lộ trình 4 giai đoạn</a></li>
+      <li><a href="#caveats">Caveats</a></li>
+    </ol>
+  </nav>
+
+  <div class="tldr" id="tldr">
+    <span class="label">TL;DR (nguyên văn từ bài gốc)</span>
+    <ul>
+      <li><strong>Con người vẫn là người ra quyết định, không phải người gõ code.</strong> Dữ liệu của Anthropic từ ~400.000 phiên Claude Code (10/2025–4/2026) cho thấy con người ra khoảng 70% quyết định lập kế hoạch (làm gì) nhưng chỉ 20% quyết định thực thi (viết code thế nào) — và người có chuyên môn sâu càng nhận về nhiều giá trị hơn. Vai trò của bạn là "gatekeeper": chốt kế hoạch, kiến trúc và review, chứ không đọc mù từng dòng AI sinh ra.</li>
+      <li><strong>Kiểm soát khối lượng bằng quy trình, không bằng sức người.</strong> Áp dụng vòng lặp "Explore → Plan → Code → Commit" với Plan Mode, chia nhỏ task, dùng CLAUDE.md/ADR làm "tài liệu sống", và dựng các cổng human-in-the-loop (duyệt plan, PR nhỏ, CI gates, review bằng subagent/second-opinion AI). AI sinh code nhanh gấp bội nhưng khả năng <em>thẩm định</em> của con người mới là nút thắt — phải quản trị "backpressure".</li>
+      <li><strong>Kỹ năng cần nâng cấp là tư duy reviewer/architect.</strong> Chuyển từ "coder" sang system design, đọc &amp; review code, testing/eval, và context engineering. Đây là điều Karpathy gọi là chuyển từ "vibe coding" sang "agentic engineering" — nghề nghiệp có kỷ luật, nơi bạn điều phối các agent nhưng vẫn chịu trách nhiệm cuối cùng về chất lượng, bảo mật và kiến trúc.</li>
+    </ul>
+  </div>
+
+  <h2 id="key-findings">Key Findings</h2>
+
+  <div class="finding">
+    <h4><span class="num-badge">1</span>Phân công lao động rõ rệt: con người quyết định "cái gì", AI quyết định "thế nào"</h4>
+    <p>Nghiên cứu "How Claude Code is used in practice" của Anthropic (phân tích ~400.000 phiên từ ~235.000 người, 10/2025–4/2026) khẳng định verbatim:</p>
+    <blockquote>"On average, people make about 70% of the planning decisions but only 20% of the execution decisions... people decide what to build, and the agent decides how to build it."</blockquote>
+    <p>Càng có chuyên môn, AI càng làm được nhiều việc mỗi lệnh, và tỷ lệ thành công (đo bằng bằng chứng verify được như test pass/commit) càng cao — nghĩa là chuyên môn của bạn là "bộ khuếch đại", không phải thứ bị thay thế.</p>
+  </div>
+
+  <div class="finding">
+    <h4><span class="num-badge">2</span>Chất lượng code AI có rủi ro đo lường được — code trông sạch nhưng nợ kỹ thuật ẩn</h4>
+    <ul>
+      <li><strong>Veracode 2025 GenAI Code Security Report</strong> (&gt;100 LLM, 80 tác vụ): <em>"45 percent of the code samples failed security tests and introduced OWASP Top 10 security vulnerabilities."</em> Java rủi ro nhất (72% thất bại), XSS thất bại 86% (CWE-80), log injection 88% (CWE-117). Bản cập nhật Spring 2026 của Veracode cho thấy tỷ lệ đạt an ninh vẫn "stuck at approximately 55%".</li>
+      <li><strong>CodeRabbit "State of AI vs Human Code Generation"</strong> (17/12/2025; 320 PR AI-đồng tác giả + 150 PR người): PR có AI trung bình <strong>10,83 vấn đề/PR so với 6,45</strong> của người (~1,7x). Lỗi critical +40%, major +70%; ở phân vị 90 là 26 vấn đề/PR (&gt;2x người). David Loker (Director of AI, CodeRabbit): <em>"AI coding tools dramatically increase output, but they also introduce predictable, measurable weaknesses that organizations must actively mitigate."</em></li>
+      <li><strong>GitClear "AI Copilot Code Quality" 2025</strong> (211 triệu dòng, 2020–2024): code churn (dòng bị sửa/revert trong 2 tuần) tăng từ 3,1% (2020) lên 5,7% (2024), tiếp tục lên ~7,1% (2025); dòng copy/paste lần đầu vượt dòng refactor (8,3%→12,3%).</li>
+    </ul>
+  </div>
+
+  <div class="finding">
+    <h4><span class="num-badge">3</span>Plan Mode là công cụ kiểm soát số một</h4>
+    <p>Đây là chế độ read-only nơi Claude đọc codebase, đặt câu hỏi, và trình bày kế hoạch (file nào sửa, theo thứ tự nào, vì sao) trước khi động vào code. Boris Cherny (tác giả Claude Code tại Anthropic) tự dùng workflow: bắt đầu ở Plan Mode, tinh chỉnh kế hoạch qua lại, rồi mới chuyển sang Auto-Accept để thực thi.</p>
+  </div>
+
+  <div class="finding">
+    <h4><span class="num-badge">4</span>CLAUDE.md là "điểm đòn bẩy cao nhất" nhưng phải ngắn</h4>
+    <p>Đây là file Claude đọc đầu mỗi phiên. Đồng thuận cộng đồng: giữ dưới ~200–300 dòng (root <code>CLAUDE.md</code> của HumanLayer &lt;60 dòng), chỉ chứa thứ đúng xuyên suốt mọi phiên. File quá dài gây "context rot" khiến Claude bỏ qua chính các quy tắc của bạn.</p>
+  </div>
+
+  <div class="finding">
+    <h4><span class="num-badge">5</span>Review AI-generated code phải khác review code người</h4>
+    <p>Vì code AI "trông đúng" (plausible) nhưng lỗi tinh vi hơn, review phải mất <em>nhiều</em> thời gian mỗi dòng hơn, tập trung vào: edge cases, concurrency, input validation, dependency ảo (slopsquatting), và việc AI làm yếu CI (xóa test, thêm <code>|| true</code>). Dùng nhiều lớp filter: automated gates trước, rồi con người tập trung vào logic/kiến trúc/rủi ro cao. Tại Microsoft, AI review <em>lớp đầu</em> cho &gt;90% PR (&gt;600K PR/tháng), giúp giảm 10–20% thời gian hoàn thành PR — nhưng con người vẫn chốt cuối.</p>
+  </div>
+
+  <div class="finding">
+    <h4><span class="num-badge">6</span>Anti-pattern nguy hiểm nhất: "trust-then-verify gap" và "accept-without-read"</h4>
+    <p>Karpathy (bài đăng X ngày 26/1/2026) mô tả các agent:</p>
+    <blockquote>"đưa ra giả định sai mà không kiểm tra, phức tạp hóa code và API, bloat abstraction, sửa/xóa code lân cận không được phép... không quản lý sự bối rối của chúng, không hỏi làm rõ, không nêu ra bất nhất, không trình bày trade-off, không phản biện khi cần."</blockquote>
+  </div>
+
+  <h2 id="details">Details</h2>
+
+  <h3>1. Vấn đề #1: Kiểm soát tốc độ và khối lượng code/tài liệu AI sinh ra</h3>
+
+  <p><strong>Nguyên tắc nền tảng: "backpressure".</strong> Khi năng lực sinh code vượt xa năng lực thẩm định của con người, bạn phải chủ động giới hạn throughput — giống backpressure trong hệ phân tán. Đừng để AI viết cả khối lớn rồi mới review; hãy ép nó đi từng bước nhỏ mà bạn theo kịp.</p>
+
+  <p><strong>Workflow lõi: Explore → Plan → Code → Commit (chính thức từ Anthropic).</strong></p>
+  <ul>
+    <li><strong>Explore:</strong> Vào Plan Mode (<code>Shift+Tab</code> hai lần, hoặc <code>claude --permission-mode plan</code>). Yêu cầu Claude đọc các file liên quan và <em>không viết code</em>. Với codebase lớn, giao việc khám phá cho subagent để không làm đầy context chính: <em>"use a subagent to investigate how our auth system handles token refresh."</em></li>
+    <li><strong>Plan:</strong> Yêu cầu Claude lập kế hoạch chi tiết. Dùng từ khóa "think" / "think hard" / "ultrathink" để cấp thêm ngân sách suy luận. Nhấn <code>Ctrl+G</code> để mở plan trong editor và sửa trực tiếp trước khi duyệt.</li>
+    <li><strong>Code:</strong> Thoát Plan Mode, để Claude thực thi <em>từng bước</em>, verify liên tục.</li>
+    <li><strong>Commit:</strong> Yêu cầu Claude commit với message mô tả và tạo PR.</li>
+  </ul>
+  <p>Anthropic nhấn mạnh: bỏ qua Explore + Plan là lỗi phổ biến nhất khiến Claude "nhảy thẳng vào code" và giải sai vấn đề. Nhưng Plan Mode cũng có overhead — với task nhỏ (sửa typo, thêm log, đổi tên biến) thì làm thẳng. Quy tắc: nếu mô tả được diff trong một câu, bỏ qua plan.</p>
+
+  <p><strong>Chia nhỏ task &amp; incremental development.</strong> Dùng stacked PRs (PR nhỏ, atomic, xếp chồng): PR 200 dòng review được, PR 2.000 dòng thì không. PR nhỏ cũng cho AI reviewer kết quả tốt hơn nhiều.</p>
+
+  <p><strong>Duy trì mental model về codebase.</strong> Dùng chính Claude Code như công cụ onboarding — hỏi nó "logging hoạt động thế nào?", "làm sao thêm API endpoint mới?", "edge case nào mà <code>CustomerOnboardingFlowImpl</code> xử lý?". Tại Anthropic đây đã thành quy trình onboarding cốt lõi. Điểm mấu chốt: bạn phải <em>chủ động hỏi để hiểu</em>, không phải đọc mù toàn bộ diff.</p>
+
+  <p><strong>Quản lý context aggressively (đây là ràng buộc cơ bản nhất).</strong> Hiệu năng LLM giảm khi context đầy. Do đó:</p>
+  <ul>
+    <li><code>/clear</code> giữa các task không liên quan ("kitchen sink session" là anti-pattern).</li>
+    <li><code>/compact &lt;instructions&gt;</code> để nén có chọn lọc (vd <code>/compact Focus on the API changes</code>).</li>
+    <li>Sau 2 lần sửa mà vẫn sai → <code>/clear</code> và viết lại prompt tốt hơn, vì context đã bị ô nhiễm bởi các cách tiếp cận thất bại.</li>
+    <li>Dùng <code>/rewind</code> / checkpoint để quay lại trạng thái trước (lưu ý: chỉ track thay đổi <em>của Claude</em>, không thay thế git).</li>
+  </ul>
+
+  <p><strong>Tài liệu sống (living documentation) để theo kịp:</strong></p>
+  <ul>
+    <li><strong>CLAUDE.md</strong> — chạy <code>/init</code> để tạo khung, rồi tự tay tinh chỉnh. Cấu trúc tốt: mô tả 1 dòng về project → tech stack → <em>commands</em> (build/test/lint — phần ROI cao nhất) → architecture (3–5 thư mục quan trọng, trỏ tới file thay vì mô tả dài) → conventions → gotchas. KHÔNG lặp lại thứ linter đã enforce. Mẹo vàng (Boris Cherny): mỗi khi Claude làm sai, bảo nó <em>"Update your CLAUDE.md so you don't make that mistake again"</em> — file trở thành vòng phản hồi tự học. Đặt được ở nhiều cấp: <code>~/.claude/CLAUDE.md</code> (toàn cục), <code>./CLAUDE.md</code> (check vào git chia sẻ team), <code>./CLAUDE.local.md</code> (cá nhân, gitignore), và phân cấp cho monorepo.</li>
+    <li><strong>ADR (Architecture Decision Records)</strong> — ghi lại quyết định + bối cảnh + lý do + phương án bị loại + hệ quả. Trong codebase AI, ADR trở thành "bộ nhớ dự án bền vững" cho cả người và AI: nó ngăn AI đề xuất lại phương án team đã cân nhắc và loại bỏ (vd đề xuất tách microservice khi team đã chọn modular monolith). Có thể nhờ Claude quét codebase sinh ADR theo template MADR — nhưng <strong>phải review phần "Context" và "Consequences" vì AI có thể bịa ra cái "why".</strong></li>
+    <li><strong>Skills</strong> (<code>.claude/skills/*/SKILL.md</code>) cho kiến thức chỉ dùng đôi khi (deploy, SEO workflow) — nạp theo yêu cầu, không làm phình context mỗi phiên. Giữ SKILL.md dưới 500 dòng.</li>
+  </ul>
+
+  <h3>2. Vấn đề #2: Nắm và đánh giá kiến trúc, làm "cửa ải cuối"</h3>
+
+  <p><strong>Yêu cầu AI đưa nhiều phương án kèm trade-off.</strong> Đừng chấp nhận một kiến trúc duy nhất. Prompt mẫu:</p>
+  <blockquote>"Tạo bảng trade-off so sánh 3 phương án cho [vấn đề]. Tiêu chí: chi phí, độ nhất quán, tốc độ failover, độ phức tạp vận hành, tuân thủ. Nêu rõ ưu/nhược mỗi phương án và khuyến nghị đường ít rủi ro nhất."</blockquote>
+  <p>Chi phí hỏi là 2 phút hội thoại; chi phí chọn sai là nhiều tuần refactor.</p>
+
+  <p><strong>Áp dụng tư duy ATAM (Architecture Tradeoff Analysis Method) đơn giản hóa.</strong> Đánh giá kiến trúc theo quality attributes (scalability, security, maintainability, cost), xác định risks, sensitivity points và trade-offs, ánh xạ ngược về yêu cầu. Nghiên cứu học thuật xác nhận con người muốn AI đóng vai "design analyzer" phân tích trade-off/risk — nhưng cũng khẳng định:</p>
+  <blockquote>"AI should not settle the final decision. Because this is the part that people should be accountable for."</blockquote>
+
+  <p><strong>Hỏi ngược lại AI &amp; để AI phỏng vấn bạn.</strong> Với feature lớn, dùng:</p>
+  <blockquote>"I want to build [X]. Interview me in detail using the AskUserQuestion tool. Ask about technical implementation, edge cases, tradeoffs... then write a complete spec to SPEC.md."</blockquote>
+  <p>Điều này ép làm rõ trước khi code, và tạo spec self-contained để chạy ở phiên mới sạch context.</p>
+
+  <p><strong>Cross-check bằng AI khác (adversarial / second opinion).</strong> Vì một reviewer chạy trong context mới chỉ thấy diff + tiêu chí (không thấy lý luận đã tạo ra code) nên đánh giá khách quan hơn. Các cách:</p>
+  <ul>
+    <li><strong>Writer/Reviewer pattern:</strong> Session A viết code, Session B (context sạch) review — không bị thiên vị vì "code mình vừa viết".</li>
+    <li><strong>Subagent review:</strong> <em>"use a subagent to review this code for edge cases"</em> hoặc chạy skill <code>/code-review</code> có sẵn (review diff hiện tại trong subagent mới, trả findings về phiên chính).</li>
+    <li><strong>Cross-model:</strong> Plugin <code>codex</code> của OpenAI gọi từ trong Claude Code để lấy second opinion từ model khác; plugin <code>claude-review-loop</code> (Hamel Husain) tự động chạy Codex review qua Stop hook trước khi bạn chấp nhận thay đổi.</li>
+    <li><strong>Cảnh báo:</strong> reviewer được yêu cầu "tìm lỗ hổng" sẽ luôn báo cáo <em>một số</em>, kể cả khi code ổn. Bảo nó chỉ flag gap ảnh hưởng correctness/yêu cầu, tránh over-engineering (thêm abstraction thừa, code phòng thủ, test cho case không thể xảy ra).</li>
+  </ul>
+
+  <p><strong>Quy trình review code AI-generated hiệu quả (checklist 10 điểm):</strong></p>
+  <ol>
+    <li>Requirement fulfillment: có đủ acceptance criteria không?</li>
+    <li>Edge cases: null, empty list, dữ liệu sai định dạng, hành vi bất thường.</li>
+    <li>Logical soundness: đi bộ qua logic phức tạp (AI giỏi code "trông đúng").</li>
+    <li>Error handling: không crash, log context, xử lý exception.</li>
+    <li>Concurrency: hàm gọi 2 lần liên tiếp thì sao?</li>
+    <li>Input validation: mọi input ngoài (user/API/file/queue) được validate/sanitize.</li>
+    <li>Performance: cảnh giác I/O tuần tự trong vòng lặp (AI hay tạo hàng trăm request nối tiếp thay vì song song).</li>
+    <li>Dependencies: mọi thư viện đề xuất <em>có thật</em>, còn được bảo trì, không lỗ hổng (cảnh giác slopsquatting/package ảo).</li>
+    <li>Secrets: không hardcode API key/credential.</li>
+    <li>CI integrity: AI KHÔNG được làm yếu CI (xóa test, <code>|| true</code>, skip lint) — đây là blocker tuyệt đối.</li>
+  </ol>
+
+  <p><strong>Thiết lập human-in-the-loop gates (nhiều lớp filter):</strong></p>
+  <ol>
+    <li><strong>Plan approval gate:</strong> không code khi plan chưa được duyệt.</li>
+    <li><strong>Automated pre-review gates</strong> (chạy trước khi người xem): lint, format, typecheck, unit test, static analysis (vd Snyk/CodeQL), secret scanning.</li>
+    <li><strong>Hooks</strong> (deterministic, không thể hallucinate): <code>PreToolUse</code> chặn lệnh nguy hiểm / ghi vào thư mục cấm; <code>PostToolUse</code> chạy linter sau mỗi edit; <code>Stop</code> hook ép chạy check cuối phiên. Hooks đảm bảo "luôn xảy ra" khác với CLAUDE.md chỉ mang tính khuyến nghị (Claude tuân ~80%). Có loại hook <code>agent</code>/<code>prompt</code> để spawn subagent kiểm tra logic phức tạp.</li>
+    <li><strong>PR review gate:</strong> con người duyệt cuối. Mô hình Microsoft: AI làm lớp đầu &gt;90% PR (&gt;600K PR/tháng), con người vẫn chốt.</li>
+    <li><strong>CI/CD &amp; test coverage gate:</strong> coverage là hợp đồng với hành vi hiện tại; không merge khi test đỏ.</li>
+    <li><strong><code>/goal</code> condition &amp; verification:</strong> cho Claude một check chạy được (test/build/screenshot) để nó tự đóng vòng lặp; yêu cầu nó <em>trưng bằng chứng</em> (output test) thay vì khẳng định "đã xong". Đây là điều Anthropic gọi là practice hiệu quả nhất: <em>"Give Claude a way to verify its work."</em></li>
+  </ol>
+
+  <p><strong>Trách nhiệm người approve.</strong> Karpathy (Sequoia Ascent 2026, ngày 30/4/2026) nói thẳng:</p>
+  <blockquote>"You are not allowed to introduce vulnerabilities because of vibe coding. You are still responsible for your software, just as before."</blockquote>
+  <p>— và tóm gọn:</p>
+  <blockquote>"Vibe coding raises the floor. Agentic engineering raises the ceiling."</blockquote>
+  <p>Bốn câu hỏi phải trả lời được trước khi merge: code làm gì, tại sao làm thế, hỏng ở đâu, ai chịu trách nhiệm. Nếu không trả lời được → code chưa được hiểu → chưa được sở hữu → không merge.</p>
+
+  <h3>3. Vấn đề #3: Lộ trình upskill và cách làm việc đúng</h3>
+
+  <p><strong>Từ "vibe coding" sang "agentic engineering" (Karpathy).</strong> Vibe coding = mô tả, nhận code, chấp nhận, đi tiếp — nâng "sàn" (ai cũng làm được) nhưng không có "thanh chất lượng". Agentic engineering = nghề có kỷ luật, nâng "trần": bạn điều phối các agent stochastic nhưng vẫn giữ conceptual ownership, review mọi diff về <em>kiến trúc</em> (không chỉ syntax), xây eval loop, giữ ranh giới bảo mật. Karpathy: ở tầng cao, "technical mastery là bội số còn lớn hơn trước" — người hiểu sâu kiến trúc đạt 10–100x năng suất, người mới chỉ sinh code hỏng nhanh hơn.</p>
+
+  <p><strong>Kỹ năng quan trọng hơn trong kỷ nguyên AI coding (thứ tự ưu tiên):</strong></p>
+  <ol>
+    <li><strong>System design &amp; architecture</strong> — vì AI giỏi local optimization nhưng không hiểu hệ quả cấp hệ thống. Đây là "taste" mà senior có nhờ đã đi qua đủ hệ thống thực.</li>
+    <li><strong>Code reading &amp; review</strong> — kỹ năng đọc diff tìm lỗi conceptual, cross-system assumptions (không chỉ syntax).</li>
+    <li><strong>Testing &amp; eval design</strong> — xây feedback loop (test/eval/benchmark) để agent tự cải thiện; theo Karpathy, "traditional software tự động hóa cái <em>specify</em> được, LLM tự động hóa cái <em>verify</em> được."</li>
+    <li><strong>Context engineering</strong> — được cộng đồng gọi là kỹ năng chuyển dịch quan trọng nhất 2026: cấu trúc CLAUDE.md, skills, hooks, chọn context, quản lý memory. Sâu hơn prompt engineering.</li>
+    <li><strong>Spec design</strong> — viết spec chi tiết (invariants, security boundaries) trước khi prompt.</li>
+    <li><strong>Domain expertise &amp; judgment</strong> — dữ liệu Anthropic: chuyên môn càng cao, tỷ lệ thành công càng cao.</li>
+  </ol>
+
+  <h3>4. Áp dụng theo bối cảnh</h3>
+
+  <p><strong>(a) Dự án công ty, codebase lớn, làm việc nhóm:</strong></p>
+  <ul>
+    <li>CLAUDE.md check vào git để cả team đóng góp; dùng CLAUDE.md phân cấp (root + thư mục con) cho monorepo.</li>
+    <li>Coding standards cho AI-generated code: nhúng policy ở 3 nơi — <code>CONTRIBUTING.md</code>, PR template (kèm checklist 10 điểm), và file instruction của AI (<code>CLAUDE.md</code>). Yêu cầu PR description ghi rõ: AI đóng vai gì, prompt/context nào, con người đóng góp/verify gì.</li>
+    <li>Review policy phân theo rủi ro: thay đổi low-risk đi nhanh; thay đổi API/auth/dữ liệu nhạy cảm/AI-generated nhận review sâu hơn. Đừng để thời gian review PR-AI bằng PR-người — nếu bằng nghĩa là đang "rubber-stamp".</li>
+    <li>Phân phối subagents/hooks/commands qua <strong>plugins</strong> để cả team cùng chuẩn (vd cài <code>code-review</code> plugin 4-agent của Boris Cherny, gán điểm tin cậy 0–100, lọc dưới 80 để giảm false positive).</li>
+    <li>MCP servers cho dữ liệu nhạy cảm (kiểm soát/log truy cập) thay vì CLI trực tiếp.</li>
+  </ul>
+
+  <p><strong>(b) Side project / micro-SaaS một người:</strong></p>
+  <ul>
+    <li>Cân bằng tốc độ vs bảo trì: dùng auto-accept mode cho phần "rìa" (peripheral, như UI phụ), làm việc đồng bộ với prompt chi tiết cho core business logic. Tại Anthropic, RL team báo cáo auto-accept thành công ngay lần đầu chỉ ~1/3 lần, nên checkpoint thường xuyên để revert dễ.</li>
+    <li>Vẫn giữ tối thiểu: CLAUDE.md tốt, test coverage cho code core, ADR cho quyết định lớn (để "bạn của 6 tháng sau" hiểu được).</li>
+    <li>Coi "domain expertise là nút thắt, không phải công cụ" (bài học từ ranthebuilder.cloud: Claude build website nhanh nhưng SEO/security hardening/analytics phải tự lái vì hiểu <em>tại sao chúng quan trọng</em>).</li>
+    <li>Dùng git worktrees chạy nhiều session song song (feature + bugfix) không đụng nhau.</li>
+    <li>Cảnh giác "90-day reckoning": code vibe nhanh ngày 1 nhưng nợ kỹ thuật lộ ra sau ~3 tháng; phòng bằng test + review kiến trúc + enforce consistency (error handling nhất quán) ngay từ đầu.</li>
+  </ul>
+
+  <h2 id="recommendations">Recommendations</h2>
+
+  <p class="phase-label">Giai đoạn 0 — Thiết lập nền (tuần 1)</p>
+  <ol>
+    <li>Viết CLAUDE.md thủ công (&lt;200 dòng): commands, architecture 3–5 thư mục, conventions, gotchas. Check vào git.</li>
+    <li>Cấu hình <code>settings.json</code> deny-first: chặn lệnh nguy hiểm. Thêm 1–2 hook cơ bản (lint sau edit, chặn ghi vào <code>migrations/</code>). Thứ tự: quyền → <code>/init</code> CLAUDE.md → tùy chỉnh.</li>
+    <li>Cài Karpathy-style guardrails vào CLAUDE.md (think-before-coding, no silent assumptions, minimal solution first, no orthogonal edits).</li>
+  </ol>
+
+  <p class="phase-label">Giai đoạn 1 — Kỷ luật workflow (tuần 2–4)</p>
+  <ol start="4">
+    <li>Mặc định mọi task không tầm thường: Explore (Plan Mode) → duyệt plan → Code → verify → Commit.</li>
+    <li>Với mọi feature: yêu cầu 2–3 phương án kiến trúc kèm trade-off table trước khi chọn.</li>
+    <li>Tạo subagent <code>code-reviewer</code> (context riêng, model opus cho task quan trọng) và chạy nó/skill <code>/code-review</code> trên mọi diff trước khi merge.</li>
+    <li>Dùng <code>/clear</code> giữa các task; sau 2 lần sửa sai thì reset + prompt lại.</li>
+  </ol>
+
+  <p class="phase-label">Giai đoạn 2 — Cổng &amp; tự động hóa (tháng 2)</p>
+  <ol start="8">
+    <li>Dựng CI gates: lint + typecheck + test + secret scan + static analysis; PR template với checklist 10 điểm và 3 câu hỏi về vai trò AI.</li>
+    <li>Thêm cross-model second opinion (plugin <code>codex</code> hoặc <code>claude-review-loop</code>) cho các thay đổi rủi ro cao.</li>
+    <li>Đóng gói workflow team thành plugin để đồng bộ.</li>
+  </ol>
+
+  <p class="phase-label">Giai đoạn 3 — Upskill reviewer/architect (tháng 3+ và liên tục)</p>
+  <ol start="11">
+    <li>Học system design: <em>Designing Data-Intensive Applications</em> (Kleppmann &amp; Riccomini, bản 2 — 2/2026), ByteByteGo, The System Design Primer (repo miễn phí của Donne Martin), Gaurav Sen (YouTube miễn phí).</li>
+    <li>Đọc chính thống về Claude Code: docs Anthropic (<code>code.claude.com/docs</code> — best-practices, common-workflows, sub-agents, hooks), báo cáo "How Anthropic teams use Claude Code" và "How Claude Code is used in practice".</li>
+    <li>Học spec-driven development: thử GitHub Spec Kit (open-source, agent-neutral, các lệnh <code>/speckit.specify → plan → tasks → implement</code>) hoặc BMAD-METHOD trên 1 feature nhỏ.</li>
+    <li>Đọc "A Philosophy of Software Design", "The Pragmatic Programmer" cho tư duy trade-off/craftsmanship.</li>
+  </ol>
+
+  <h3>Ngưỡng để điều chỉnh (benchmark)</h3>
+  <ul>
+    <li>Nếu thời gian review PR-AI ≈ PR-người → bạn đang rubber-stamp, tăng review depth.</li>
+    <li>Nếu code churn dự án &gt;7% hoặc bug rate tăng → siết gates, giảm auto-accept.</li>
+    <li>Nếu Claude bỏ qua quy tắc CLAUDE.md → file quá dài, cắt bớt hoặc chuyển thành hook.</li>
+    <li>Nếu AI thành công lần đầu &lt;~1/3 lần cho task autonomous → task chưa đủ scoped, quay lại planning.</li>
+    <li>Nếu bạn không trả lời được "code này làm gì / hỏng ở đâu" → dừng, không merge.</li>
+  </ul>
+
+  <p><strong>Tài nguyên tiếng Nhật chất lượng</strong> (nếu cần): docs chính thức bản JP (<code>code.claude.com/docs/ja/best-practices</code>); note của すめし "93 Claude Code Best Practices"; Qiita "Claude Codeベストプラクティス2026" và "成果を安定させる7つの鉄則"; Zenn về plugins Claude Code 2026 (ino_h).</p>
+
+  <h2 id="caveats">Caveats</h2>
+  <div class="note">
+    <ul>
+      <li><strong>Số liệu chất lượng code AI đến từ nhiều nguồn với phương pháp khác nhau</strong> — Veracode (45% OWASP), CodeRabbit (~1,7x vấn đề), GitClear (churn ~2x) đo các thứ khác nhau, không nên gộp thành một con số. Con số "2,74x" của CodeRabbit chỉ áp dụng cho XSS, không phải toàn bộ security; và cần lưu ý CodeRabbit không thể xác minh 100% rằng nhóm PR "người" hoàn toàn không dùng AI.</li>
+      <li><strong>Tính năng Claude Code thay đổi rất nhanh</strong> (Anthropic ship gần như hằng tuần); tên lệnh/phím tắt/model có thể đổi. Hãy bám nguyên tắc (research→plan→execute→review), không bám phiên bản cụ thể.</li>
+      <li><strong>Karpathy guidelines repo (220K+ sao) chưa được Karpathy chính thức endorse</strong>; nó thiên về thận trọng, có thể gây over-engineering/friction cho task đơn giản một dòng.</li>
+      <li><strong>Các công cụ/plugin bên thứ ba</strong> (Graphite, CodeRabbit, Cursor Bugbot, các skill cộng đồng) là gợi ý, không phải khuyến nghị tuyệt đối; đánh giá theo bối cảnh, compliance và chi phí token của bạn. Nhiều bài blog là nguồn thứ cấp/tiếp thị — ưu tiên docs Anthropic và báo cáo nghiên cứu gốc.</li>
+      <li><strong>Chi phí token:</strong> spec-driven &amp; multi-agent tốn token hơn ~20–40%; theo dõi bằng <code>/cost</code> và dùng <code>.claudeignore</code> để loại file không cần đọc.</li>
+    </ul>
+  </div>
+
+  <div class="footer-nav">
+    ← <a href="../index.html">Quay lại AI Radar</a> · Bài này nằm tại <code>ai-radar/articles/lam-chu-vibe-coding-claude-code.html</code>
+  </div>
+</main>
+</body>
+</html>
